@@ -22,7 +22,7 @@ type model struct {
 	cursor            int              // which to-do list item our cursor is pointing at
 	selected          map[int]struct{} // which to-do items are selected
 	inputMeasurment   int              // measurement to convert
-	outputMeasurement float32          // measurement after conversion
+	outputMeasurement string           // measurement after conversion
 	isCalculated      bool             // Are we done yet?
 }
 
@@ -31,7 +31,7 @@ func initialModel() model {
 		conversionOpts:    []string{"Celsius to Felsius", "Fahrenheit to Felsius", "Felsius to Celsius", "Felsius to Fahrenheit"},
 		conversionChoice:  "",
 		inputMeasurment:   10,
-		outputMeasurement: float32(10),
+		outputMeasurement: "",
 		// A map which indicates which conversionOpts are selected. We're using
 		// the  map like a mathematical set. The keys refer to the indexes
 		// of the `conversionOpts` slice, above.
@@ -57,22 +57,29 @@ func fahrenheitToCelsius(degreesF float32) float32 {
 	return (degreesF - 32) / 1.8
 }
 
-func convertTemp(m model) float32 {
-	result := float32(0.0)
+func convertTemp(m model) string {
+	result := ""
 	if m.conversionChoice == m.conversionOpts[0] {
 		celsius := float32(m.inputMeasurment)
 		fahrenheit := celsiusToFahrenheit(celsius)
 
-		result = (celsius + fahrenheit) / 2
+		felsius := (celsius + fahrenheit) / 2
+
+		result = fmt.Sprintf("%s%s", strconv.Itoa(int(felsius)), "°ϵ")
+
 	} else if m.conversionChoice == m.conversionOpts[1] {
 		fahrenheit := float32(m.inputMeasurment)
 		celsius := fahrenheitToCelsius(fahrenheit)
 
-		result = (celsius + fahrenheit) / 2
+		felsius := (celsius + fahrenheit) / 2
 
+		result = fmt.Sprintf("%s%s", strconv.Itoa(int(felsius)), "°ϵ")
 	} else if m.conversionChoice == m.conversionOpts[2] {
-
+		// felsius := float32(m.inputMeasurment)
+		// ToDo: Felsius to Celsius
 	} else if m.conversionChoice == m.conversionOpts[3] {
+		// felsius := float32(m.inputMeasurment)
+		// ToDo: Felsius to Fahrenheit
 
 	} else {
 		//ToDo: Throw an error: "Bad conversion option passed to convertTemp"
@@ -165,7 +172,7 @@ func (m model) View() string {
 		s += fmt.Sprintf("Result of %s\n\n", m.conversionChoice)
 
 		// Render current value of input
-		s += fmt.Sprintf("%s \n", strconv.Itoa(int(m.outputMeasurement)))
+		s += fmt.Sprintf("%s \n", m.outputMeasurement)
 	}
 
 	// The footer
