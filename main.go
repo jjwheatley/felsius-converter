@@ -30,7 +30,7 @@ func initialModel() model {
 	return model{
 		conversionOpts:    []string{"Celsius to Felsius", "Fahrenheit to Felsius", "Felsius to Celsius", "Felsius to Fahrenheit"},
 		conversionChoice:  "",
-		inputMeasurment:   10,
+		inputMeasurment:   -42,
 		outputMeasurement: "",
 		// A map which indicates which conversionOpts are selected. We're using
 		// the  map like a mathematical set. The keys refer to the indexes
@@ -62,7 +62,6 @@ func convertTemp(m model) string {
 	if m.conversionChoice == m.conversionOpts[0] {
 		celsius := float32(m.inputMeasurment)
 		fahrenheit := celsiusToFahrenheit(celsius)
-
 		felsius := (celsius + fahrenheit) / 2
 
 		result = fmt.Sprintf("%s%s", strconv.Itoa(int(felsius)), "°ϵ")
@@ -70,16 +69,21 @@ func convertTemp(m model) string {
 	} else if m.conversionChoice == m.conversionOpts[1] {
 		fahrenheit := float32(m.inputMeasurment)
 		celsius := fahrenheitToCelsius(fahrenheit)
-
 		felsius := (celsius + fahrenheit) / 2
 
 		result = fmt.Sprintf("%s%s", strconv.Itoa(int(felsius)), "°ϵ")
+
 	} else if m.conversionChoice == m.conversionOpts[2] {
-		// felsius := float32(m.inputMeasurment)
-		// ToDo: Felsius to Celsius
+		// Felsius to Celsius
+		felsius := float32(m.inputMeasurment)
+		celsius := ((felsius - 16) * 5) / 7
+		result = fmt.Sprintf("%s%s", strconv.Itoa(int(celsius)), "°c")
+
 	} else if m.conversionChoice == m.conversionOpts[3] {
-		// felsius := float32(m.inputMeasurment)
-		// ToDo: Felsius to Fahrenheit
+		// Felsius to Fahrenheit
+		felsius := float32(m.inputMeasurment)
+		fahrenheit := ((felsius * 9) + 80) / 7
+		result = fmt.Sprintf("%s%s", strconv.Itoa(int(fahrenheit)), "°c")
 
 	} else {
 		//ToDo: Throw an error: "Bad conversion option passed to convertTemp"
