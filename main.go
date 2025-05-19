@@ -36,8 +36,7 @@ func initialModel() model {
 }
 
 func (m model) Init() tea.Cmd {
-	// Just return `nil`, which means "no I/O right now, please."
-	return nil
+	return nil //`nil` = "no current I/O"
 }
 
 func isConversionChosen(m model) bool {
@@ -48,40 +47,43 @@ func celsiusToFahrenheit(degreesC float32) float32 {
 	return (degreesC * 1.8) + 32.0
 }
 
+func celsiusToFelsius(degreesC float32) float32 {
+	return (degreesC + celsiusToFahrenheit(degreesC)) / 2
+}
+
 func fahrenheitToCelsius(degreesF float32) float32 {
 	return (degreesF - 32) / 1.8
+}
+
+func fahrenheitToFelsius(degreesF float32) float32 {
+	return (fahrenheitToCelsius(degreesF) + degreesF) / 2
+}
+
+func felsiusToCelsius(degreesFelcius float32) float32 {
+	return ((degreesFelcius - 16) * 5) / 7
+}
+
+func felsiusToFahrenheit(degreesFelcius float32) float32 {
+	return ((degreesFelcius * 9) + 80) / 7
 }
 
 func convertTemp(m model) string {
 	result := ""
 	if m.conversionChoice == m.conversionOpts[0] {
-		celsius := float32(m.inputMeasurment)
-		fahrenheit := celsiusToFahrenheit(celsius)
-		felsius := (celsius + fahrenheit) / 2
-
+		felsius := celsiusToFelsius(float32(m.inputMeasurment))
 		result = fmt.Sprintf("%s%s", strconv.Itoa(int(felsius)), "°ϵ")
 
 	} else if m.conversionChoice == m.conversionOpts[1] {
-		fahrenheit := float32(m.inputMeasurment)
-		celsius := fahrenheitToCelsius(fahrenheit)
-		felsius := (celsius + fahrenheit) / 2
-
+		felsius := fahrenheitToFelsius(float32(m.inputMeasurment))
 		result = fmt.Sprintf("%s%s", strconv.Itoa(int(felsius)), "°ϵ")
 
 	} else if m.conversionChoice == m.conversionOpts[2] {
-		// Felsius to Celsius
-		felsius := float32(m.inputMeasurment)
-		celsius := ((felsius - 16) * 5) / 7
+		celsius := felsiusToCelsius(float32(m.inputMeasurment))
 		result = fmt.Sprintf("%s%s", strconv.Itoa(int(celsius)), "°c")
 
 	} else if m.conversionChoice == m.conversionOpts[3] {
-		// Felsius to Fahrenheit
-		felsius := float32(m.inputMeasurment)
-		fahrenheit := ((felsius * 9) + 80) / 7
-		result = fmt.Sprintf("%s%s", strconv.Itoa(int(fahrenheit)), "°c")
-
-	} else {
-		//ToDo: Throw an error: "Bad conversion option passed to convertTemp"
+		fahrenheit := felsiusToFahrenheit(float32(m.inputMeasurment))
+		result = fmt.Sprintf("%s%s", strconv.Itoa(int(fahrenheit)), "°f")
 	}
 
 	return result
