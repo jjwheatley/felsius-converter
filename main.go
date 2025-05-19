@@ -70,20 +70,24 @@ func felsiusToFahrenheit(degreesFelcius float32) float32 {
 func convertTemp(m model) string {
 	result := ""
 	if m.conversionChoice == m.conversionOpts[0] {
-		felsius := celsiusToFelsius(float32(m.inputMeasurment))
-		result = fmt.Sprintf("%s%s", strconv.Itoa(int(felsius)), "°ϵ")
+		celcius := m.inputMeasurment
+		felsius := celsiusToFelsius(float32(celcius))
+		result = fmt.Sprintf("%s°c = %s °ϵ", strconv.Itoa(int(celcius)), strconv.Itoa(int(felsius)))
 
 	} else if m.conversionChoice == m.conversionOpts[1] {
-		felsius := fahrenheitToFelsius(float32(m.inputMeasurment))
-		result = fmt.Sprintf("%s%s", strconv.Itoa(int(felsius)), "°ϵ")
+		fahrenheit := m.inputMeasurment
+		felsius := fahrenheitToFelsius(float32(fahrenheit))
+		result = fmt.Sprintf("%s°f = %s °ϵ", strconv.Itoa(int(fahrenheit)), strconv.Itoa(int(felsius)))
 
 	} else if m.conversionChoice == m.conversionOpts[2] {
+		felsius := m.inputMeasurment
 		celsius := felsiusToCelsius(float32(m.inputMeasurment))
-		result = fmt.Sprintf("%s%s", strconv.Itoa(int(celsius)), "°c")
+		result = fmt.Sprintf("%s°ϵ = %s °c", strconv.Itoa(int(felsius)), strconv.Itoa(int(celsius)))
 
 	} else if m.conversionChoice == m.conversionOpts[3] {
+		felsius := m.inputMeasurment
 		fahrenheit := felsiusToFahrenheit(float32(m.inputMeasurment))
-		result = fmt.Sprintf("%s%s", strconv.Itoa(int(fahrenheit)), "°f")
+		result = fmt.Sprintf("%s°ϵ = %s °f", strconv.Itoa(int(felsius)), strconv.Itoa(int(fahrenheit)))
 	}
 
 	return result
@@ -93,17 +97,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg := msg.(type) {
 
-	// Is it a key press?
-	case tea.KeyMsg:
+	case tea.KeyMsg: //Type check: was the input type a key?
 
-		// Cool, what was the actual key pressed?
-		switch msg.String() {
-
-		// These keys should exit the program.
+		switch msg.String() { //Which key was pressed
 		case "ctrl+c", "q":
-			return m, tea.Quit
+			return m, tea.Quit //exit the program
 
-		// The "up" and "k" keys move the cursor up
 		case "up", "k":
 			if !isConversionChosen(m) {
 				if m.cursor > 0 {
@@ -113,7 +112,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.inputMeasurment++
 			}
 
-		// The "down" and "j" keys move the cursor down
 		case "down", "j":
 			if !isConversionChosen(m) {
 				if m.cursor < len(m.conversionOpts)-1 {
@@ -123,16 +121,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.inputMeasurment--
 			}
 
-		// The "enter" key and the spacebar (a literal space) toggle
-		// the selected state for the item that the cursor is pointing at.
-		case "enter", " ":
-			// fmt.Print(m.conversionOpts[m.cursor])
+		case "enter", " ": //" " = spacebar
 			if !isConversionChosen(m) {
 				m.conversionChoice = m.conversionOpts[m.cursor]
 			} else {
 				m.outputMeasurement = convertTemp(m)
 				m.isCalculated = true
-				// ToDo: Run conversion & display output
+				return m, tea.Quit //exit the program
 			}
 		}
 	}
