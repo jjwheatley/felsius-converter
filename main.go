@@ -162,7 +162,7 @@ func (m model) View() string {
 			s += fmt.Sprintf("%s %s. %s\n", cursor, optionNo, cOpt)
 		}
 
-	} else if m.isCalculated == false {
+	} else if !m.isCalculated {
 		// The header
 		s += fmt.Sprintf("Enter measurement for conversion (from %s) using the arrow keys.\n\n", m.conversionChoice)
 
