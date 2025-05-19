@@ -29,7 +29,7 @@ func initialModel() model {
 	return model{
 		conversionOpts:    []string{"Celsius to Felsius", "Fahrenheit to Felsius", "Felsius to Celsius", "Felsius to Fahrenheit"},
 		conversionChoice:  "",
-		inputMeasurment:   -42,
+		inputMeasurment:   0,
 		outputMeasurement: "",
 		isCalculated:      false,
 	}
@@ -164,7 +164,7 @@ func (m model) View() string {
 
 	} else if m.isCalculated == false {
 		// The header
-		s += fmt.Sprintf("Enter measurement for conversion (from %s)\n\n", m.conversionChoice)
+		s += fmt.Sprintf("Enter measurement for conversion (from %s) using the arrow keys.\n\n", m.conversionChoice)
 
 		// Render current value of input
 		s += fmt.Sprintf("%s \n", strconv.Itoa(m.inputMeasurment))
