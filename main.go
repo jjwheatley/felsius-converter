@@ -19,7 +19,7 @@ func main() {
 type model struct {
 	conversionOpts    []string // List of supported conversions
 	conversionChoice  string   // The conversion selected, inititally an empty string
-	cursor            int      // which to-do list item our cursor is pointing at
+	cursor            int      // which item the cursor is pointed at
 	inputMeasurment   int      // measurement to convert
 	outputMeasurement string   // measurement after conversion
 	isCalculated      bool     // Are we done yet?
@@ -144,35 +144,22 @@ func (m model) View() string {
 
 		// Iterate over our conversionOpts
 		for i, cOpt := range m.conversionOpts {
-
-			// Is the cursor pointing at this conversion option (cOpt)?
 			cursor := " " // no cursor
 			if m.cursor == i {
 				cursor = ">" // cursor!
 			}
 
-			// Calculate option number
-			optionNo := strconv.Itoa(i + 1)
-			// Render the row
-			s += fmt.Sprintf("%s %s. %s\n", cursor, optionNo, cOpt)
+			optionNo := strconv.Itoa(i + 1)                         // Calculate option number
+			s += fmt.Sprintf("%s %s. %s\n", cursor, optionNo, cOpt) // Render row
 		}
-
 	} else if !m.isCalculated {
-		// The header
-		s += fmt.Sprintf("Enter measurement for conversion (from %s) using the arrow keys.\n\n", m.conversionChoice)
-
-		// Render current value of input
-		s += fmt.Sprintf("%s \n", strconv.Itoa(m.inputMeasurment))
+		s += fmt.Sprintf("Enter measurement for conversion (from %s) using the arrow keys.\n\n", m.conversionChoice) // Header
+		s += fmt.Sprintf("%s \n", strconv.Itoa(m.inputMeasurment))                                                   // Render current value of input
 	} else {
-		// The header
-		s += fmt.Sprintf("Result of %s\n\n", m.conversionChoice)
-
-		// Render current value of input
-		s += fmt.Sprintf("%s \n", m.outputMeasurement)
+		s += fmt.Sprintf("Result of %s\n\n", m.conversionChoice) //Header
+		s += fmt.Sprintf("%s \n", m.outputMeasurement)           // Render current value of input
 	}
 
-	// The footer
-	s += "\nPress q to quit.\n"
-	// Send the UI for rendering
-	return s
+	s += "\nPress q to quit.\n" //Footer
+	return s                    // Send text to UI for rendering
 }
