@@ -17,13 +17,12 @@ func main() {
 }
 
 type model struct {
-	conversionOpts    []string         // List of supported conversions
-	conversionChoice  string           // The conversion selected, inititally an empty string
-	cursor            int              // which to-do list item our cursor is pointing at
-	selected          map[int]struct{} // which to-do items are selected
-	inputMeasurment   int              // measurement to convert
-	outputMeasurement string           // measurement after conversion
-	isCalculated      bool             // Are we done yet?
+	conversionOpts    []string // List of supported conversions
+	conversionChoice  string   // The conversion selected, inititally an empty string
+	cursor            int      // which to-do list item our cursor is pointing at
+	inputMeasurment   int      // measurement to convert
+	outputMeasurement string   // measurement after conversion
+	isCalculated      bool     // Are we done yet?
 }
 
 func initialModel() model {
@@ -32,11 +31,7 @@ func initialModel() model {
 		conversionChoice:  "",
 		inputMeasurment:   -42,
 		outputMeasurement: "",
-		// A map which indicates which conversionOpts are selected. We're using
-		// the  map like a mathematical set. The keys refer to the indexes
-		// of the `conversionOpts` slice, above.
-		selected:     make(map[int]struct{}),
-		isCalculated: false,
+		isCalculated:      false,
 	}
 }
 
@@ -112,7 +107,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if m.cursor > 0 {
 					m.cursor--
 				}
-			} else {
+			} else if m.outputMeasurement == "" { //Freeze input once output is calculated
 				m.inputMeasurment++
 			}
 
@@ -122,7 +117,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if m.cursor < len(m.conversionOpts)-1 {
 					m.cursor++
 				}
-			} else {
+			} else if m.outputMeasurement == "" { //Freeze input once output is calculated
 				m.inputMeasurment--
 			}
 
